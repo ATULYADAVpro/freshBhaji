@@ -5,10 +5,10 @@ import { useAppContext } from '../context/AppContext'
 
 export default function Navbar() {
     const [open, setOpen] = useState(false)
-    const { user, setUser, showUserLogin, setshowUserLogin, navigate } = useAppContext();
+    const { seller, setSeller, showsellerLogin, setshowsellerLogin, navigate } = useAppContext();
 
     const logout = async () => {
-        setUser(null)
+        setseller(null)
         navigate('/')
     }
 
@@ -37,9 +37,9 @@ export default function Navbar() {
                     <button className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full">3</button>
                 </div>
 
-                {!user ? (
+                {!seller ? (
                     <button onClick={() => {
-                        setshowUserLogin(true)
+                        setshowsellerLogin(true)
                     }} className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition text-white rounded-full">
                         Login
                     </button>
@@ -66,13 +66,13 @@ export default function Navbar() {
                 <div className={`${open ? 'flex' : 'hidden'} absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}>
                     <NavLink to={'/'} onClick={() => setOpen(false)}>Home</NavLink>
                     <NavLink to={'/myorder'} onClick={() => setOpen(false)}>All Product</NavLink>
-                    {user && <NavLink to={'/'} onClick={() => setOpen(false)}>My Order</NavLink>}
+                    {seller && <NavLink to={'/'} onClick={() => setOpen(false)}>My Order</NavLink>}
                     <NavLink to={'/'} onClick={() => setOpen(false)}>Contact</NavLink>
 
-                    {!user ? (<button
+                    {!seller ? (<button
                         onClick={() => {
                             setOpen(false);
-                            setshowUserLogin(true);
+                            setshowsellerLogin(true);
 
                         }}
                         className="cursor-pointer px-6 py-2 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm">
