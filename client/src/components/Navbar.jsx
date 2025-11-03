@@ -63,7 +63,7 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             {open && (
-                <div className={`${open ? 'flex' : 'hidden'} absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}>
+                <div className={`${open ? 'flex' : 'hidden'} z-50 absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}>
                     <NavLink to={'/'} onClick={() => setOpen(false)}>Home</NavLink>
                     <NavLink to={'/myorder'} onClick={() => setOpen(false)}>All Product</NavLink>
                     {seller && <NavLink to={'/'} onClick={() => setOpen(false)}>My Order</NavLink>}
