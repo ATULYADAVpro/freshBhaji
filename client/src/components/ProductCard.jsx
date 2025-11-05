@@ -5,8 +5,7 @@ import { useAppContext } from "../context/AppContext";
 const ProductCard = ({ product }) => {
     const [count, setCount] = useState(0);
     const { currency, addToCart, updateCartItem, removeFromCart, cartItems, navigate } = useAppContext();
-    console.log(currency)
-    console.log(product)
+
 
     return product && (
         <div className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white  sm:min-w-56 max-w-56 w-full">
@@ -28,7 +27,7 @@ const ProductCard = ({ product }) => {
                     </p>
                     <div className="text-primary" onClick={(e) => e.stopPropagation()}>
                         {!cartItems[product._id] ? (
-                            <button className="flex items-center cursor-pointer justify-center gap-1 bg-primary/10 border border-primary/40 md:w-20 w-16 h-[34px] rounded" onClick={() => addToCart(product._id)} >
+                            <button className="flex items-center cursor-pointer justify-center gap-1 bg-primary/10 border border-primary/40 md:w-20 w-16 h-[34px] rounded" onClick={() => addToCart(product._id)}>
                                 <img src={assets.cart_icon} alt="cart icon" />
                                 Add
                             </button>
