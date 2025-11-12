@@ -12,16 +12,21 @@ import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
 import AddAddress from './components/AddAddress'
 import MyOrder from './pages/MyOrder'
+import SellerLogin from './components/seller/SellerLogin'
+import SellerLayout from './pages/seller/SellerLayout'
+import AddProduct from './pages/seller/AddProduct'
+import ProductList from './pages/seller/ProductList'
+import Orders from './pages/seller/Orders'
 
 export default function App() {
-  const isSeller = useLocation().pathname.includes('seller')
-  const { showUserLogin } = useAppContext()
+  const isSellerPath = useLocation().pathname.includes('seller')
+  const { showUserLogin, isSeller } = useAppContext()
   return (
     <div>
-      {isSeller ? null : <Navbar />}
+      {isSellerPath ? null : <Navbar />}
       {showUserLogin ? <Login /> : null}
       <Toaster />
-      <div className={`${isSeller} ? '' : 'px-6 md:px-16 lg:px-24 xl:px-32'`}>
+      <div className={`${isSellerPath ? '' : 'px-6 md:px-16 lg:px-24 xl:px-32'}`}>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/products' element={<AllProduct />} />
@@ -30,10 +35,15 @@ export default function App() {
           <Route path='/cart' element={<Cart />} />
           <Route path='/add-address' element={<AddAddress />} />
           <Route path='/my-orders' element={<MyOrder />} />
+          <Route path='/seller' element={isSeller ? <SellerLayout /> : <SellerLogin />}>
+            <Route index element={isSeller ? <AddProduct /> : null} />
+            <Route path='product-list' element={<ProductList />} />
+            <Route path='orders' element={<Orders />} />
+          </Route>
         </Routes>
       </div>
       {/* ---- Footer  section --- */}
-      {isSeller ? null : <Footer />}
+      {isSellerPath ? null : <Footer />}
     </div>
   )
 }
