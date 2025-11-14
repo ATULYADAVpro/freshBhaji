@@ -32,7 +32,6 @@ export const register = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
-
 // login 
 export const login = async (req, res) => {
     try {
@@ -51,7 +50,7 @@ export const login = async (req, res) => {
             return res.json({ success: false, message: 'Invalid email and password' })
         }
 
-         const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' })
+        const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' })
 
         res.cookie('token', token, {
             httpOnly: true,  // -> Prevent Javascript to access cookie
@@ -63,6 +62,43 @@ export const login = async (req, res) => {
         return res.json({ success: true, user: { email: existingUser.email, name: existingUser.name } })
 
 
+    } catch (error) {
+        console.log(error.message)
+        res.json({ success: false, message: error.message })
+    }
+}
+// check auth
+export const isAuth = async (req, res) => {
+    try {
+        const userId = req.userId;
+        if (!userId) {
+            return res.status(401).json({ success: false, message: 'Unauthorized: No user ID provided' });
+        }
+
+        console.log('User ID:', userId);
+        const user = await User.findById(userId).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        console.log('User:', user);
+        return res.json({ success: true, user });
+    } catch (error) {
+        console.error('Auth check error:', error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const logout = async (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,  // -> Prevent Javascript to access cookie
+            secure: process.env.NODE_ENV, // Use secure cookies in production
+            sameSite: process.env.NODE_ENV ? 'none' : 'strict', // CSRF protection
+        })
+
+        return res.json({ success: true, message: 'Logged Out' })
     } catch (error) {
         console.log(error.message)
         res.json({ success: false, message: error.message })
