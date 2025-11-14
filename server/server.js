@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import connectDB from './configs/db.js';
 import dotenv from 'dotenv';
+import userRouter from './routes/userRoute.js';
 
 dotenv.config();
 
@@ -21,6 +22,8 @@ app.use(cors({
 app.get('/', (req, res) => {
     res.send("Backend Api is working.");
 });
+
+app.use('/api/user',userRouter)
 
 connectDB().then(() => {
     app.listen(port, () => {
