@@ -3,11 +3,20 @@ import { useAppContext } from '../../context/AppContext';
 import { assets, dummyOrders } from '../../assets/assets';
 
 export default function Orders() {
-  const { currency } = useAppContext();
+  const { currency,axios, user } = useAppContext();
   const [orders, setOrders] = useState([]);
 
   const fetchOrders = async () => {
-    setOrders(dummyOrders)
+     try {
+            const { data } = await axios.get('/api/order/seller')
+            if (data.success) {
+                console.log(data)
+                setOrders(data.orders)
+            }
+        } catch (error) {
+            console.log(error.message)
+            toast.error(error.message)
+        }
   };
 
   useEffect(() => {

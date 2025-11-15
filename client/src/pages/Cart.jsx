@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { assets, dummyAddress } from '../assets/assets';
 import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 export default function Cart() {
     const [showAddress, setShowAddress] = React.useState(false)
-    const { products, navigate, currency, cartItems, removeFromCart, updateCartItem, addToCart, getCartCount, getCartAmount } = useAppContext();
+    const { products, navigate, currency, cartItems, user, axios, setCartItems, removeFromCart, updateCartItem, addToCart, getCartCount, getCartAmount } = useAppContext();
     const [cartArray, setCartArray] = useState([])
-    const [addresses, setAdsresses] = useState(dummyAddress)
-    const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0])
+    const [addresses, setAdsresses] = useState([])
+    const [selectedAddress, setSelectedAddress] = useState(null)
     const [paymentOption, setPaymentOption] = useState('COD')
 
     const getCart = () => {
@@ -20,8 +21,46 @@ export default function Cart() {
         setCartArray(tempArray)
     }
 
-    const placeOrder = () => {
+    const getUserAddress = async () => {
+        try {
+            const { data } = await axios.get('/api/address/get');
+            if (data.success) {
+                setAdsresses(data.addresses)
+                if (data.addresses.length > 0) {
+                    setSelectedAddress(data.addresses[0])
+                }
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
 
+    const placeOrder = async () => {
+        try {
+            if (!selectedAddress) {
+                return toast.error("Please select an address")
+            }
+            //place order with cod
+            if (paymentOption === 'COD') {
+                const { data } = await axios.post('/api/order/cod', {
+                    userId: user._id,
+                    items: cartArray.map(item => ({ product: item._id, quantity: item.quantity })),
+                    address: selectedAddress._id
+                })
+
+                if (data.success) {
+                    toast.success(data.message)
+                    setCartItems({})
+                    navigate('/my-orders')
+                } else {
+                    toast.error(data.message)
+                }
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
 
     useEffect(() => {
@@ -30,6 +69,13 @@ export default function Cart() {
         }
 
     }, [products, cartItems])
+
+
+    useEffect(() => {
+        if (user) {
+            getUserAddress()
+        }
+    }, [user])
 
     return products.length > 0 && cartItems ? (
         <div className="flex flex-col md:flex-row mt-16">
@@ -61,9 +107,9 @@ export default function Cart() {
                                         <p>Qty:</p>
                                         <select onChange={
                                             e => updateCartItem(product._id, Number(e.target.value))
-                                        } 
-                                        value={cartItems[product._id]}
-                                        className='outline-none'>
+                                        }
+                                            value={cartItems[product._id]}
+                                            className='outline-none'>
                                             {Array(cartItems[product._id] > 9 ? cartItems[product._id] : 9).fill('').map((_, index) => (
                                                 <option key={index} value={index + 1}>{index + 1}</option>
                                             ))}
