@@ -1,2 +1,4 @@
 # Fresh Bhaji 
 Fresh Bhaji is a MERN stack-based e-commerce platform that enables customers to conveniently browse and purchase fresh fruits, vegetables, and other grocery items online. Built with MongoDB, Express.js, React, and Node.js, the application offers a responsive user interface, secure authentication, dynamic product listings, and seamless cart and checkout functionality. Ideal for local vendors and consumers seeking a modern, scalable solution for daily essentials.
+
+This project already created by GreatStack youtuber. this is my practing project
